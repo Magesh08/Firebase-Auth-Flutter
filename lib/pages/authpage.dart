@@ -3,7 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:loginauth/pages/Homepage.dart';
-import 'package:loginauth/pages/Passwordpage.dart'; // Import FirebaseAuth
+import 'package:loginauth/pages/Passwordpage.dart';
+import 'package:loginauth/pages/loginregisterpagenavigate.dart'; // Import FirebaseAuth
 
 class AuthPage extends StatelessWidget {
   const AuthPage({Key? key}) : super(key: key); // Correct constructor syntax
@@ -24,7 +25,7 @@ class AuthPage extends StatelessWidget {
             } else {
               // User is not signed in
               // Return widget for not signed in user
-              return passwordpage();
+              return loginorregister();
             }
           } else {
             // Return widget while connection is still active

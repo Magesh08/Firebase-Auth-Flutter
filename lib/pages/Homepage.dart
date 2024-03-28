@@ -11,6 +11,9 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final userdetail = FirebaseAuth.instance.currentUser!;
+
+  // ignore: prefer_typing_uninitialized_variables
   void sigOut() {
     FirebaseAuth.instance.signOut();
   }
@@ -20,14 +23,20 @@ class _HomepageState extends State<Homepage> {
     return SafeArea(
       child: Scaffold(
         body: Container(
+          width: MediaQuery.of(context).size.width * 1,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('logged in'),
-              ElevatedButton(
-                  onPressed: () {
-                    sigOut();
-                  },
-                  child: Text('Sign Out'))
+              Text('logged in : ' + userdetail.email.toString()),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ElevatedButton(
+                    onPressed: () {
+                      sigOut();
+                    },
+                    child: Text('Sign Out')),
+              )
             ],
           ),
         ),

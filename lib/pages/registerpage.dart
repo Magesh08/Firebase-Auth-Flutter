@@ -5,36 +5,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:loginauth/components/textfieldui.dart';
 
-class passwordpage extends StatefulWidget {
+class registerpage extends StatefulWidget {
   final Function()? onTap;
 
-  const passwordpage({super.key, required this.onTap});
+  const registerpage({super.key, required this.onTap});
 
   @override
-  State<passwordpage> createState() => _passwordpageState();
+  State<registerpage> createState() => _passwordpageState();
 }
 
-class _passwordpageState extends State<passwordpage> {
-  void signin() async {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
-  }
-
+class _passwordpageState extends State<registerpage> {
   final usernamecontrol = TextEditingController();
   final passwordcontrol = TextEditingController();
+  final confirmpassword = TextEditingController();
 
   void signuserId(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: usernamecontrol.text,
-        password: passwordcontrol.text,
-      );
-      Navigator.pop(context);
+      if (passwordcontrol.text == confirmpassword.text) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: usernamecontrol.text,
+          password: passwordcontrol.text,
+        );
+      } else {
+        // print("Passwords do not match."); // Debugging statement
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text('Passwords not matching.'),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Close'),
+              ),
+            ],
+          ),
+        );
+      }
     } catch (error) {
       String errorMessage = 'An error occurred';
       if (error is FirebaseAuthException) {
@@ -81,13 +88,6 @@ class _passwordpageState extends State<passwordpage> {
                       Icons.credit_card,
                       size: 80,
                     ),
-                    Text(
-                      'welcome to sign In',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                     Textfieldfun(
                       controller: usernamecontrol,
                       hintText: 'Enter your gmail id',
@@ -97,6 +97,12 @@ class _passwordpageState extends State<passwordpage> {
                     Textfieldfun(
                       controller: passwordcontrol,
                       hintText: 'Enter the password',
+                      obscuretext: true,
+                      icon: Icons.password_rounded,
+                    ),
+                    Textfieldfun(
+                      controller: confirmpassword,
+                      hintText: 'confirm the password',
                       obscuretext: true,
                       icon: Icons.password_rounded,
                     ),
@@ -111,7 +117,7 @@ class _passwordpageState extends State<passwordpage> {
                       onPressed: () {
                         signuserId(context);
                       },
-                      child: Text('Sign In'),
+                      child: Text('Sign Up'),
                     ),
                     Text('----or continue with----'),
                     Row(
@@ -119,13 +125,13 @@ class _passwordpageState extends State<passwordpage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'not an user ?',
+                          'Already an user ?',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                         GestureDetector(
                           onTap: widget.onTap,
                           child: Text(
-                            'Register',
+                            'Login',
                             style: TextStyle(
                                 fontSize: 16, color: Colors.lightBlue),
                           ),
